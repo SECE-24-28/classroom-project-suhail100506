@@ -1,0 +1,172 @@
+/* Specificity Chart */
+/*id -class -element*/
+/*0 -1 -1*/
+.parent h1 {
+    color: green;
+}
+
+/*0 -1 -1*/
+
+h1:hover {
+    color: blue;
+}
+
+/*1 -0 -0*/
+
+#red {
+    color: red;
+}
+
+/*0 -1 -0*/
+
+.yellow {
+    color: yellow;
+}
+
+/*0 -0 -2*/
+div h1 {
+    align: center;
+    color: darkblue;
+}
+
+.ul #lk div h1:hover {
+    color: orange;
+}
+
+/* button {
+    background-color: yellow;
+    border: 2px solid black;
+    padding: 4px 40px;
+    color: black;
+    margin: 10px border-radius: 5px;
+    border-radius: 300px;
+}*/
+button {
+    background-color: rgb(74, 74, 243);
+    border: 2px solid black;
+    padding: 4px 40px;
+    color: white;
+}
+
+button:hover {
+    background-color: blue;
+    color: white;
+}
+
+.card {
+    width: 300px;
+    border: 2px solid black;
+    padding: 10px;
+    border-radius: 15px;
+    margin-left: 450px;
+    background-color: lightgrey;
+}
+
+.card:hover {
+    box-shadow: 5px 10px 18px #888888;
+}
+
+body {
+    align: center;
+}
+
+.content {
+    padding: 10px 120px;
+    transition: all 2s;
+    animation: bounce 5s infinite;
+}
+
+.container {
+    background-attachment: white;
+}
+
+
+.parent {
+    background-color: red;
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.child {
+    padding: 40px;
+    background-color: yellow;
+    border: 1px solid black;
+}
+
+.long {
+    padding: 60px;
+}
+
+.nav {
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    /* display: none; */
+
+}
+
+@media (max-width: 800px) {
+    .nav {
+        display: none;
+    }
+}
+
+.logo-content {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    transform: bounce 0.4s infinite;
+}
+
+.login {
+    display: flex;
+    gap: 10px;
+}
+
+.sign {
+    margin-left: 10px;
+}
+
+.m {
+    background-color: pink;
+    transition: all 0.4s;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    color: rgb(255, 255, 255);
+}
+
+.m:hover {
+    background-color: rgb(255, 0, 0);
+    color: black;
+    transform: scale(1);
+    transition: bounce 0.1s infinite;
+}
+
+@media (min-width:500px)and(max-width: 600px) {
+    .m {
+        background-color: lightblue;
+    }
+}
+
+@keyframes bounce {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-100000px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
