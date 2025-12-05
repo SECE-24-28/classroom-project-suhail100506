@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <h1 class="text-3xl font-bold underline">
+    <!-- <h1 class="text-3xl font-bold underline">
 
     </h1>
     <div class="bg-slate-500 text-white border-4 border-rose-500 ">Hello World!</div>
@@ -51,37 +51,74 @@
             </div>
         </div>
     </div>
-</body>
 
-</html>
 
-<!DOCTYPE html>
-<html lang="en">
+    <div class="max-w-md mx-auto mt-10 p-6 border-2 rounded">
+        <h1 class="text-2xl font-bold mb-6">Welcome to Login!</h1>
+        <div class="space-y-4">
+            <div class="text-left">
+                <label class="block mb-1">Name:</label>
+                <input type="text" placeholder="Enter Your Name" class="border px-2 py-1 w-full">
+            </div>
+            <div class="text-left">
+                <label class="block mb-1">Email:</label>
+                <input type="email" placeholder="Enter Your Email" class="border px-2 py-1 w-full">
+            </div>
+            <div class="text-left">
+                <label class="block mb-1">Password:</label>
+                <input type="password" placeholder="Enter Your Password" class="border px-2 py-1 w-full">
+            </div>
+            <div class="flex justify-between pt-4">
+                <button onclick="window.open('submit.html')"
+                    class="bg-blue-500 px-4 py-2 rounded text-white">Submit</button>
+                <button type="reset" class="bg-gray-500 px-4 py-2 rounded text-white">Reset</button>
+            </div>
+        </div>
+    </div>
 
-<head>
-    <title>Login Page</title>
-</head>
+    <div class="flex flex-col p-2 border-2 m-10 h-60 justify-center items-center max-w-md mx-auto">
+        <div class="text-2xl">CONTAINER</div>
+        <div class="text-2xl" id="inc">0</div>
+        <div>
+            <button class="bg-red-500 px-4 py-2 m-2 rounded hover:bg-red-700" id="sub">-</button>
+            <button class="bg-green-500 px-4 py-2 m-2 rounded hover:bg-green-700" id="add">+</button>
+        </div>
+    </div>
+    <form class="p-10 border-2 border-gray-300">
+        <label for="name">Name</label>
+        <input class="border-2" type="text" id="name" name="name" placeholder="Enter Your Name">
+        <p id="error"></p>
+        <label for="password">Password</label>
+        <input class="border-2" type="password" id="password" name="password" placeholder="Enter Your Password">
+        <p id="password-error"></p>
+        <button class="bg-orange-200 px-4 py-2 rounded mt-4 hover:bg-orange-400">Submit</button>
+    </form> -->
 
-<h1 class="text-2xl font-bold mb-6">Welcome to Login!</h1>
-<div class="space-y-4">
-    <div class="text-left">
-        <label class="block mb-1">Name:</label>
-        <input type="text" placeholder="Enter Your Name">
-    </div>
-    <div class="text-left">
-        <label class="block mb-1">Email:</label>
-        <input type="email" placeholder="Enter Your Email">
-    </div>
-    <div class="text-left">
-        <label class="block mb-1">Password:</label>
-        <input type="password" placeholder="Enter Your Password">
-    </div>
-    <div class="flex justify-between pt-4">
-        <button onclick="window.open('submit.html')">Submit</button>
-        <button type="reset">Reset</button>
-    </div>
-</div>
-</div>
-</body>
+    <body class="bg-slate-800 min-h-screen flex justify-center items-center">
+        <div class="bg-slate-700 w-full max-w-md p-8 rounded-3xl shadow-xl">
+            <h1 class="text-center text-2xl text-white font-bold mb-4">Simple JS Quiz</h1>
+            <p id="question-no" class="text-gray-300 text-sm mb-3">
+                Question 1 of 3
+            </p>
+            <p id="question" class="text-white text-lg font-semibold mb-6">
+                Loading Question...
+            </p>
+            <div class="space-y-3">
+                <button
+                    class="cursor-pointer option w-full bg-slate-600 hover:bg-slate-500 text-white py-3 rounded-xl transition">Option</button>
+                <button
+                    class="cursor-pointer option w-full bg-slate-600 hover:bg-slate-500 text-white py-3 rounded-xl transition">Option</button>
+                <button
+                    class="cursor-pointer option w-full bg-slate-600 hover:bg-slate-500 text-white py-3 rounded-xl transition">Option</button>
+                <button
+                    class="cursor-pointer option w-full bg-slate-600 hover:bg-slate-500 text-white py-3 rounded-xl transition">Option</button>
+            </div>
+            <div class="mt-6 flex justify-end">
+                <button id="btn"
+                    class="bg-green-400 hover:bg-green-500 text-black px-5 py-2 rounded-xl font-semibold transition">Next</button>
+            </div>
+        </div>
+        <script src="script.js"></script>
+    </body>
 
 </html>
