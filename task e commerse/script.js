@@ -1,4 +1,3 @@
-// Sample product data
 const products = [
     { id: 1, name: "Apple Airpodes", price: 1200, img: "apple.webp" },
     { id: 2, name: "Smart Watch", price: 800, img: "watch.webp" },
@@ -6,7 +5,6 @@ const products = [
     { id: 4, name: "Backpack", price: 450, img: "bag.webp" }
 ];
 
-// Render products on Home Page
 const productList = document.getElementById("product-list");
 
 if (productList) {
@@ -16,8 +14,12 @@ if (productList) {
                 <img src="${p.img}" class="w-full h-40 object-contain rounded">
                 <h3 class="font-semibold text-lg mt-2">${p.name}</h3>
                 <p class="text-gray-600">₹${p.price}</p>
-                <button onclick="addToCart(${p.id})" 
+                <button onclick="buyNow(${p.id})" 
                     class="mt-2 bg-blue-600 text-white w-full py-2 rounded">
+                    Buy Now
+                </button>
+                <button onclick="addToCart(${p.id})" 
+                    class="mt-2 bg-green-600 text-white w-full py-2 rounded">
                     Add to Cart
                 </button>
             </div>
@@ -26,22 +28,28 @@ if (productList) {
     });
 }
 
-// ADD TO CART FUNCTION
 function addToCart(id) {
     const item = products.find(p => p.id === id);
 
-    // Get existing cart or empty array
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    cart.push(item); // add new item
+    cart.push(item);
 
-    localStorage.setItem("cart", JSON.stringify(cart)); // save
+    localStorage.setItem("cart", JSON.stringify(cart));
 
     alert(item.name + " added to cart!");
 }
 
+function buyNow(id) {
+    const item = products.find(p => p.id === id);
 
-// DISPLAY CART PAGE ITEMS
+    alert("Proceeding to buy " + item.name + " for ₹" + item.price);
+
+    // Optionally redirect to a checkout page
+    // window.location.href = "checkout.html?id=" + id;
+}
+
+
 const cartBox = document.getElementById("cart-items");
 
 if (cartBox) {
