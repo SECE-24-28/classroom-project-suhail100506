@@ -1,36 +1,33 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react"
+import GlobalContext from "../contexts/GlobalContext"
 
-const UserDetails = (props) => {
-    const { currentPage } = props;
-    const [userData, setUserData] = useState({});
-    const [loading, setLoading] = useState(true);
-    useEffect((props) => {
+const UserDetails = () => {
+    const { currentPage } = useContext(GlobalContext)
+    const [userData, setUserData] = useState({})
+    const [loading, setLoading] = useState({})
+    useEffect(() => {
 
         const fetchData = async () => {
-            setLoading(true);
-            const response = await fetch(`https://jsonplaceholder.typicode.com/users/${currentPage}`);
-            const data = await response.json();
-            console.log(data);
-            setUserData(data);
-            setLoading(false);
+            setLoading(true)
+            const response = await fetch(`https://jsonplaceholder.typicode.com/users/${currentPage}`)
+            const data = await response.json()
+            console.log(data)
+            setUserData(data)
+            setLoading(false)
         }
-
-        fetchData();
-    }, [currentPage]);
-
+        fetchData()
+    }, [currentPage])
     return (
-        <div className="w-[300px] mx-auto bg-orange-100 flex flex-col justify-center items-center border p-4 m-4">
-            <h2 className="text-2xl">User Details</h2>
+        <div className="w-[500px] mt-5 mx-auto bg-orange-100 flex flex-col justify-center items-center p-10 border-2">
+            <h1 className="text-3xl mb-2 underline">User Details</h1>
             {loading ? (
-                <p className="text-2xl mb-2">Loading ...</p>
+                <p className="text-xl mb-2">Loading...</p>
             ) : (
-                <>
-                    <h2 className="text-xl font-semibold">{userData.name}</h2>
-                    <p className="text-md">{userData.email}</p>
-                </>
-
+                <h1 className="text-2xl">{userData.name}</h1>
             )}
+
         </div>
-    );
+    )
 }
-export default UserDetails;
+
+export default UserDetails

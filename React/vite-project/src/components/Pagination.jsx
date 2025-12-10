@@ -1,11 +1,15 @@
-import { useEffect, useState } from 'react';
-const Pagination = (props) => {
-    const { currentPage, setCurrentPage } = props;
+import { useContext } from 'react';
+import GlobalContext from '../contexts/GlobalContext';
+
+const Pagination = () => {
+    const { currentPage, setCurrentPage } = useContext(GlobalContext);
     const handlePrevious = () => {
         setCurrentPage(currentPage - 1);
+        localStorage.setItem('page', currentPage - 1);
     }
     const handleNext = () => {
         setCurrentPage(currentPage + 1);
+        localStorage.setItem('page', currentPage + 1);
     }
 
     return (
