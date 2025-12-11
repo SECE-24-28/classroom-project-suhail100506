@@ -74,7 +74,14 @@ const ProductForm = ({ onAddProduct }) => {
                 onChange={handleOriginalPriceChange} />
             <label className="text-lg font-medium">Category</label>
             <select className="p-2 rounded-md " value={category} onChange={handleCategoryChange}>
-
+                <option value="Electronics">Electronics</option>
+                <option value="Accessories">Accessories</option>
+                <option value="Computers">Computers</option>
+                <option value="Gaming">Gaming</option>
+                <option value="Audio">Audio</option>
+                <option value="Mobile">Mobile</option>
+                <option value="Wearables">Wearables</option>
+                <option value="Home">Home</option>
             </select>
             <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md w-full hover:bg-blue-600" onClick={handleSubmit}>Submit</button>
         </div>
