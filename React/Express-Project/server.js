@@ -23,7 +23,10 @@ const app = express();
 const productsRouter = require('./routes/product');
 const blogsRouter = require('./routes/Blogs');
 const cartRouter = require('./routes/cart');
+const studentsRouter = require('./routes/students');
 const cors = require('cors');
+const connectDB = require('./config/db');
+connectDB();
 
 app.use(cors());
 
@@ -69,6 +72,7 @@ app.delete("/blogs/:id", (req, res) => {
 app.use('/products', productsRouter);
 app.use('/blogs', blogsRouter);
 app.use('/cart', cartRouter);
+app.use('/students', studentsRouter);
 
 app.listen(3000, () => {
     console.log('Server is running http://localhost:3000');

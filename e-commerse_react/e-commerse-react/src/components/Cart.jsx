@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { AppContext } from "../App";
+import { toast } from "react-toastify";
 
 const Cart = () => {
     const { cart, updateQuantity, removeFromCart } = useContext(AppContext);
@@ -19,7 +20,7 @@ const Cart = () => {
                         ) : (
                             <div className="bg-white rounded-lg shadow-md">
                                 {cart.map((item) => (
-                                    <div key={item.id} className="flex items-center gap-4 p-4 border-b last:border-b-0">
+                                    <div key={item._id} className="flex items-center gap-4 p-4 border-b last:border-b-0">
                                         <img
                                             src={item.image || "https://via.placeholder.com/100"}
                                             alt={item.name}
@@ -33,14 +34,24 @@ const Cart = () => {
 
                                         <div className="flex items-center gap-2">
                                             <button
-                                                onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                                onClick={() => {
+                                                    updateQuantity(item._id, item.quantity - 1);
+                                                    if (item.quantity - 1 === 0) {
+                                                        toast.info('Item removed from cart');
+                                                    } else {
+                                                        toast.success('Quantity updated');
+                                                    }
+                                                }}
                                                 className="bg-gray-200 hover:bg-gray-300 w-8 h-8 rounded"
                                             >
                                                 -
                                             </button>
                                             <span className="w-12 text-center font-semibold">{item.quantity}</span>
                                             <button
-                                                onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                                onClick={() => {
+                                                    updateQuantity(item._id, item.quantity + 1);
+                                                    toast.success('Quantity updated');
+                                                }}
                                                 className="bg-gray-200 hover:bg-gray-300 w-8 h-8 rounded"
                                             >
                                                 +
@@ -52,7 +63,10 @@ const Cart = () => {
                                         </div>
 
                                         <button
-                                            onClick={() => removeFromCart(item.id)}
+                                            onClick={() => {
+                                                removeFromCart(item._id);
+                                                toast.error('Item removed from cart');
+                                            }}
                                             className="text-red-500 hover:text-red-700 font-semibold"
                                         >
                                             Remove

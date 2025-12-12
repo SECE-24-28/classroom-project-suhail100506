@@ -1,89 +1,104 @@
-import express from 'express';
-import fs from 'fs/promises';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
+const express = require('express');
 const router = express.Router();
-const cartFilePath = path.join(__dirname, '../data/cart.json');
+const CartItem = require('../models/Cart');
+const fs = require('fs');
 
-router.get('/', async (req, res) => {
+// Get all cart items
+router.get("/", async (req, res) => {
     try {
-        const data = await fs.readFile(cartFilePath, 'utf8');
-        const cart = JSON.parse(data);
+        const cart = await CartItem.find().populate('productId');
         res.json(cart);
     } catch (error) {
-        res.status(500).json({ error: 'Failed to read cart' });
+        res.status(500).json({ error: 'Failed to fetch cart', message: error.message });
     }
 });
 
-router.post('/', async (req, res) => {
+// Add item to cart
+router.post("/", async (req, res) => {
     try {
-        const data = await fs.readFile(cartFilePath, 'utf8');
-        const cart = JSON.parse(data);
-
         const { productId, name, price, image, quantity } = req.body;
 
-        const existingItemIndex = cart.findIndex(item => item.productId === productId);
+        const existingItem = await CartItem.findOne({ productId });
 
-        if (existingItemIndex !== -1) {
-            cart[existingItemIndex].quantity += quantity;
+        if (existingItem) {
+            existingItem.quantity += quantity;
+            await existingItem.save();
         } else {
-            cart.push({
-                id: Date.now(),
+            const newItem = new CartItem({
                 productId,
                 name,
                 price,
-                image: image || '',
+                image,
                 quantity
             });
+            await newItem.save();
         }
 
-        await fs.writeFile(cartFilePath, JSON.stringify(cart, null, 2));
-        res.json({ cart });
+        const cart = await CartItem.find();
+        
+        // Save to cart.json
+        fs.writeFileSync("data/cart.json", JSON.stringify(cart, null, 2));
+        
+        res.status(200).json({ cart });
     } catch (error) {
-        res.status(500).json({ error: 'Failed to add to cart' });
+        res.status(500).json({ error: 'Failed to add to cart', message: error.message });
     }
 });
 
-router.put('/:id', async (req, res) => {
+// Update cart item quantity
+router.post("/:id", async (req, res) => {
     try {
-        const data = await fs.readFile(cartFilePath, 'utf8');
-        const cart = JSON.parse(data);
-
-        const itemId = parseInt(req.params.id);
+        const { id } = req.params;
         const { quantity } = req.body;
 
-        const itemIndex = cart.findIndex(item => item.id === itemId);
+        const cartItem = await CartItem.findById(id);
 
-        if (itemIndex !== -1) {
-            cart[itemIndex].quantity = quantity;
-            await fs.writeFile(cartFilePath, JSON.stringify(cart, null, 2));
-            res.json({ cart });
+        if (cartItem) {
+            cartItem.quantity = quantity;
+            await cartItem.save();
+            const cart = await CartItem.find();
+            
+            // Save to cart.json
+            fs.writeFileSync("data/cart.json", JSON.stringify(cart, null, 2));
+            
+            res.status(200).json({ cart });
         } else {
-            res.status(404).json({ error: 'Item not found' });
+            res.status(404).json({ message: "Item not found" });
         }
     } catch (error) {
-        res.status(500).json({ error: 'Failed to update cart' });
+        res.status(500).json({ error: 'Failed to update cart', message: error.message });
     }
 });
 
-router.delete('/:id', async (req, res) => {
+// Remove item from cart
+router.delete("/:id", async (req, res) => {
     try {
-        const data = await fs.readFile(cartFilePath, 'utf8');
-        let cart = JSON.parse(data);
+        const { id } = req.params;
+        await CartItem.findByIdAndDelete(id);
 
-        const itemId = parseInt(req.params.id);
-
-        cart = cart.filter(item => item.id !== itemId);
-
-        await fs.writeFile(cartFilePath, JSON.stringify(cart, null, 2));
-        res.json({ cart });
+        const cart = await CartItem.find();
+        
+        // Save to cart.json
+        fs.writeFileSync("data/cart.json", JSON.stringify(cart, null, 2));
+        
+        res.status(200).json({ cart });
     } catch (error) {
-        res.status(500).json({ error: 'Failed to remove from cart' });
+        res.status(500).json({ error: 'Failed to remove from cart', message: error.message });
     }
 });
 
-export default router;
+// Clear entire cart
+router.delete("/", async (req, res) => {
+    try {
+        await CartItem.deleteMany({});
+        
+        // Save to cart.json
+        fs.writeFileSync("data/cart.json", JSON.stringify([], null, 2));
+        
+        res.status(200).json({ message: 'Cart Cleared Successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to clear cart', message: error.message });
+    }
+});
+
+module.exports = router;

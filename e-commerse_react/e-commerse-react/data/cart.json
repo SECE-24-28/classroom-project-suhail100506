@@ -1,1 +1,13 @@
-[]
+[
+  {
+    "_id": "693c4f8b0176b06ed9a5128e",
+    "productId": "693c4d6103fe2dbf21386fdd",
+    "name": "Table",
+    "price": 1500,
+    "image": "https://img.freepik.com/premium-vector/illustration-wooden-dining-table-isolated_756535-8226.jpg?semt=ais_hybrid&w=740&q=80",
+    "quantity": 5,
+    "createdAt": "2025-12-12T17:23:23.522Z",
+    "updatedAt": "2025-12-12T17:30:47.163Z",
+    "__v": 0
+  }
+]

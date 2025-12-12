@@ -15,5 +15,12 @@
     "id": 5,
     "name": "suhail",
     "price": 20
+  },
+  {
+    "id": 6,
+    "name": "suhail",
+    "price": 20,
+    "description": "",
+    "image": ""
   }
 ]

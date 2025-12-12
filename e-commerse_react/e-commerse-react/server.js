@@ -1,20 +1,20 @@
-import express from 'express';
-import cors from 'cors';
-import productsRouter from './routes/products.js';
-import cartRouter from './routes/cart.js';
+const express = require('express');
+const cors = require('cors');
+const connectDB = require('./config/db');
+const productsRouter = require('./routes/products.js');
+const cartRouter = require('./routes/cart.js');
 
 const app = express();
 const PORT = 3000;
 
-// Middleware
+connectDB();
+
 app.use(cors());
 app.use(express.json());
 
-// Routes
 app.use('/products', productsRouter);
 app.use('/cart', cartRouter);
 
-// Start server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });

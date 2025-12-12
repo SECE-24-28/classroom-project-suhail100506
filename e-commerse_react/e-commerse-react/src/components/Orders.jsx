@@ -24,6 +24,11 @@ const Orders = () => {
 
                 {orders.length === 0 ? (
                     <div className="bg-white rounded-lg shadow-md p-12 text-center">
+                        <h2 className="text-2xl font-semibold text-gray-800 mb-2">No Orders Yet</h2>
+                        <p className="text-gray-600 mb-6">You haven't placed any orders yet. Start shopping to see your orders here!</p>
+                        <a href="/products" className="inline-block bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors">
+                            Browse Products
+                        </a>
                     </div>
                 ) : (
                     <div className="space-y-6">

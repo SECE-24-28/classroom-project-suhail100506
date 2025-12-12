@@ -10,9 +10,19 @@ const Login = () => {
     }
     const handleSubmit = (e) => {
         e.preventDefault()
-        if (userName === 'abc' && passwordRef.current.value === '123') {
+        if (userName === 'admin' && passwordRef.current.value === 'admin') {
             sessionStorage.setItem('isLoggedIn', true)
+            sessionStorage.setItem('username', 'Admin')
+            sessionStorage.setItem('role', 'admin')
+            toast.success('Welcome Admin!')
             navigate('/admin')
+        }
+        else if (userName === 'abc' && passwordRef.current.value === '123') {
+            sessionStorage.setItem('isLoggedIn', true)
+            sessionStorage.setItem('username', userName)
+            sessionStorage.setItem('role', 'user')
+            toast.success('Login Successful!')
+            navigate('/products')
         }
         else {
             toast.error('Login Failed')
