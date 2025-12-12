@@ -1,6 +1,9 @@
+import { useContext } from "react";
+import { AppContext } from "../App";
 import ProductCard from "./ProductCard";
 
-const Home = ({ products, onAddToCart }) => {
+const Home = () => {
+    const { products, addToCart } = useContext(AppContext);
     const topProducts = products.slice(0, 3);
 
     return (
@@ -19,7 +22,7 @@ const Home = ({ products, onAddToCart }) => {
                         <ProductCard
                             key={product.id}
                             product={product}
-                            onAddToCart={onAddToCart}
+                            onAddToCart={addToCart}
                         />
                     ))}
                 </div>

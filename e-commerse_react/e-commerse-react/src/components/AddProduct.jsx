@@ -17,6 +17,10 @@ const ProductForm = ({ onAddProduct }) => {
     const handleOriginalPriceChange = (e) => {
         setOriginalPrice(e.target.value);
     }
+    const [description, setDescription] = useState("");
+    const handleDescriptionChange = (e) => {
+        setDescription(e.target.value);
+    }
     const [category, setCategory] = useState("Electronics");
     const handleCategoryChange = (e) => {
         setCategory(e.target.value);
@@ -25,8 +29,8 @@ const ProductForm = ({ onAddProduct }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (!productName || !ImageURL || !sellingPrice || !originalPrice) {
-            alert("Please fill all fields");
+        if (!productName || !sellingPrice) {
+            return;
         }
 
         const productData = {
@@ -35,6 +39,7 @@ const ProductForm = ({ onAddProduct }) => {
             image: ImageURL,
             sellingPrice: parseFloat(sellingPrice),
             originalPrice: parseFloat(originalPrice),
+            description: description,
             category
         };
 
@@ -43,6 +48,7 @@ const ProductForm = ({ onAddProduct }) => {
         setImageURL("");
         setSellingPrice("");
         setOriginalPrice("");
+        setDescription("");
         setCategory("Electronics");
     }
     return (
@@ -72,6 +78,13 @@ const ProductForm = ({ onAddProduct }) => {
                 className="p-2 rounded-md "
                 value={originalPrice}
                 onChange={handleOriginalPriceChange} />
+            <label className="text-lg font-medium">Description</label>
+            <textarea
+                placeholder="Enter Product Description"
+                className="p-2 rounded-md "
+                value={description}
+                onChange={handleDescriptionChange}
+                rows="3" />
             <label className="text-lg font-medium">Category</label>
             <select className="p-2 rounded-md " value={category} onChange={handleCategoryChange}>
                 <option value="Electronics">Electronics</option>

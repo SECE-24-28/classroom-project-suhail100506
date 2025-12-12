@@ -1,0 +1,66 @@
+[
+    {
+        "id": 1,
+        "name": "Wireless Headphones",
+        "description": "Premium noise-cancelling wireless headphones with 30-hour battery life",
+        "price": 750.00,
+        "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400",
+        "category": "Audio"
+    },
+    {
+        "id": 2,
+        "name": "Laptop Stand",
+        "description": "Ergonomic aluminum laptop stand for better posture",
+        "price": 450.00,
+        "image": "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400",
+        "category": "Accessories"
+    },
+    {
+        "id": 3,
+        "name": "Wireless Mouse",
+        "description": "Ergonomic wireless mouse with adjustable DPI",
+        "price": 499.00,
+        "image": "https://images.unsplash.com/photo-1527814050087-3793815479db?w=400",
+        "category": "Accessories"
+    },
+    {
+        "id": 4,
+        "name": "Mechanical Keyboard",
+        "description": "RGB backlit mechanical keyboard with blue switches",
+        "price": 1299.00,
+        "image": "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400",
+        "category": "Accessories"
+    },
+    {
+        "id": 5,
+        "name": "4K Monitor",
+        "description": "27-inch 4K UHD monitor with HDR support",
+        "price": 3999.00,
+        "image": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400",
+        "category": "Electronics"
+    },
+    {
+        "id": 7,
+        "name": "USB Hub",
+        "description": "7-port USB 3.0 hub with fast charging",
+        "price": 299.00,
+        "image": "https://images.unsplash.com/photo-1625948515291-69613efd103f?w=400",
+        "category": "Accessories"
+    },
+    {
+        "id": 8,
+        "name": "Bluetooth Speaker",
+        "description": "Portable waterproof Bluetooth speaker with 12-hour battery",
+        "price": 599.00,
+        "image": "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400",
+        "category": "Audio"
+    },
+    {
+        "id": 9,
+        "name": "Gaming Mouse Pad",
+        "description": "Extended RGB gaming mouse pad with anti-slip base",
+        "price": 199.00,
+        "image": "https://images.unsplash.com/photo-1616588589676-62b3bd4ff6d2?w=400",
+        "category": "Gaming"
+    }
+]

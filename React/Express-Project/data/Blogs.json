@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "title": "Understanding React Hooks",
+        "content": "React Hooks are functions that let you use state and other React features without writing a class. They were introduced in React 16.8 and have become a fundamental part of modern React development."
+    },
+    {
+        "id": 2,
+        "title": "Getting Started with Express.js",
+        "content": "Express.js is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications. It simplifies the process of building server-side applications with Node.js."
+    },
+    {
+        "id": 3,
+        "title": "Building RESTful APIs with Express",
+        "content": "RESTful APIs are a popular way to structure web services. Express makes it easy to create RESTful APIs by providing a simple and intuitive routing system, middleware support, and integration with various databases."
+    },
+    {
+        "id": 4,
+        "title": "State Management in React",
+        "content": "State management is a crucial aspect of building React applications. Various libraries like Redux, MobX, and the Context API help manage state effectively, allowing for better organization and scalability of applications."
+    }
+]

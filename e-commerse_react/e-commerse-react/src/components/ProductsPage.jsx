@@ -1,6 +1,10 @@
+import { useContext } from "react";
+import { AppContext } from "../App";
 import ProductCard from "./ProductCard";
 
-const ProductsPage = ({ products, onAddToCart }) => {
+const ProductsPage = () => {
+    const { products, addToCart } = useContext(AppContext);
+
     return (
         <div className="min-h-screen bg-gray-100 py-12">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -18,7 +22,7 @@ const ProductsPage = ({ products, onAddToCart }) => {
                         <ProductCard
                             key={product.id}
                             product={product}
-                            onAddToCart={onAddToCart}
+                            onAddToCart={addToCart}
                         />
                     ))}
                 </div>

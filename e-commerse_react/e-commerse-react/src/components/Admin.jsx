@@ -1,6 +1,9 @@
+import { useContext } from 'react';
+import { AppContext } from '../App';
 import AddProduct from './AddProduct';
 
-const Admin = ({ onAddProduct }) => {
+const Admin = () => {
+    const { addProduct } = useContext(AppContext);
     const username = sessionStorage.getItem('username') || 'Admin';
 
     return (
@@ -13,7 +16,7 @@ const Admin = ({ onAddProduct }) => {
 
                 <div className="bg-white rounded-lg shadow-md p-8">
                     <h2 className="text-2xl font-bold text-gray-800 mb-6">Add New Product</h2>
-                    <AddProduct onAddProduct={onAddProduct} />
+                    <AddProduct onAddProduct={addProduct} />
                 </div>
 
 

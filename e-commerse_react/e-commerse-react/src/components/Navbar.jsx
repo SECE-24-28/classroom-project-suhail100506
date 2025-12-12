@@ -1,17 +1,18 @@
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate, useLocation } from 'react-router';
 import { useState, useEffect } from 'react';
 
 const NavigationBar = ({ cartCount = 0 }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [role, setRole] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         const loggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
         const userRole = sessionStorage.getItem('role') || '';
         setIsLoggedIn(loggedIn);
         setRole(userRole);
-    }, []);
+    }, [location]);
 
     const handleLogout = () => {
         sessionStorage.removeItem('isLoggedIn');

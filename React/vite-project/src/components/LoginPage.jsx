@@ -17,7 +17,7 @@ const LoginPage = () => {
             navigate('/admin')
         }
         else {
-            console.log('Login Failed')
+            toast.error('Login Failed')
         }
 
     }

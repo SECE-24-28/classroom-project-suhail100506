@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router';
 
 const ProtectedRoute = ({ children, requireAdmin = false }) => {
     const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';

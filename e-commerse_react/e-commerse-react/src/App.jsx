@@ -1,17 +1,12 @@
-import { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useState, createContext, useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import Home from './components/Home';
-import ProductsPage from './components/ProductsPage';
-import Cart from './components/Cart';
-import Login from './components/Login';
-import Orders from './components/Orders';
-import Admin from './components/Admin';
-import ProtectedRoute from './components/ProtectedRoute';
 import headphoneImg from "./components/headphone.png";
 import standImg from "./components/stand.png";
 import mouseImg from "./components/mouse.png";
+
+export const AppContext = createContext();
 
 const App = () => {
   const [products, setProducts] = useState([
@@ -83,93 +78,157 @@ const App = () => {
 
   const [cart, setCart] = useState([]);
 
-  const addProduct = (newProduct) => {
-    const productWithId = {
-      ...newProduct,
-      id: products.length + 1,
-      price: parseFloat(newProduct.sellingPrice),
-      image: newProduct.imageUrl
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/products');
+        const data = await response.json();
+        if (data && data.length > 0) {
+          setProducts(data);
+        }
+      } catch (error) {
+      }
     };
-    setProducts([...products, productWithId]);
-  };
+    fetchProducts();
+  }, []);
 
-  const addToCart = (product) => {
-    const existingItem = cart.find(item => item.id === product.id);
-    if (existingItem) {
-      setCart(cart.map(item =>
-        item.id === product.id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      ));
-    } else {
-      setCart([...cart, { ...product, quantity: 1 }]);
+  useEffect(() => {
+    const fetchCart = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/cart');
+        const data = await response.json();
+        if (data && data.length > 0) {
+          setCart(data);
+        }
+      } catch (error) {
+        // Error fetching cart
+      }
+    };
+    fetchCart();
+  }, []);
+
+  const addProduct = async (newProduct) => {
+    try {
+      const response = await fetch('http://localhost:3000/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: JSON.stringify({
+          name: newProduct.name,
+          price: parseFloat(newProduct.sellingPrice),
+          description: newProduct.description || "",
+          image: newProduct.image || "",
+          category: newProduct.category || "Other"
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+
+        const productsResponse = await fetch('http://localhost:3000/products');
+        const updatedProducts = await productsResponse.json();
+        setProducts(updatedProducts);
+      }
+    } catch (error) {
     }
   };
 
-  const updateQuantity = (productId, newQuantity) => {
+  const addToCart = async (product) => {
+    try {
+      const response = await fetch('http://localhost:3000/cart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: JSON.stringify({
+          productId: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.image || '',
+          quantity: 1
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setCart(data.cart);
+      }
+    } catch (error) {
+      // Fallback to local state
+      const existingItem = cart.find(item => item.productId === product.id);
+      if (existingItem) {
+        setCart(cart.map(item =>
+          item.productId === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        ));
+      } else {
+        setCart([...cart, { ...product, productId: product.id, quantity: 1 }]);
+      }
+    }
+  };
+
+  const updateQuantity = async (cartItemId, newQuantity) => {
     if (newQuantity <= 0) {
-      removeFromCart(productId);
+      removeFromCart(cartItemId);
     } else {
-      setCart(cart.map(item =>
-        item.id === productId
-          ? { ...item, quantity: newQuantity }
-          : item
-      ));
+      try {
+        const response = await fetch(`http://localhost:3000/cart/${cartItemId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8'
+          },
+          body: JSON.stringify({ quantity: newQuantity })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          setCart(data.cart);
+        }
+      } catch (error) {
+
+        setCart(cart.map(item =>
+          item.id === cartItemId
+            ? { ...item, quantity: newQuantity }
+            : item
+        ));
+      }
     }
   };
 
-  const removeFromCart = (productId) => {
-    setCart(cart.filter(item => item.id !== productId));
+  const removeFromCart = async (cartItemId) => {
+    try {
+      const response = await fetch(`http://localhost:3000/cart/${cartItemId}`, {
+        method: 'DELETE'
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setCart(data.cart);
+      }
+    } catch (error) {
+      // Fallback to local state
+      setCart(cart.filter(item => item.id !== cartItemId));
+    }
   };
 
-  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+  const cartCount = cart?.reduce((total, item) => total + item.quantity, 0) || 0;
 
   return (
-    <Router>
+    <AppContext.Provider value={{ products, cart, addProduct, addToCart, updateQuantity, removeFromCart }}>
       <div className="flex flex-col min-h-screen">
         <Navbar cartCount={cartCount} />
         <div className="flex-grow">
-          <Routes>
-            <Route
-              path="/"
-              element={<Home products={products} onAddToCart={addToCart} />}
-            />
-            <Route
-              path="/products"
-              element={<ProductsPage products={products} onAddToCart={addToCart} />}
-            />
-            <Route
-              path="/cart"
-              element={
-                <Cart
-                  cart={cart}
-                  onUpdateQuantity={updateQuantity}
-                  onRemoveItem={removeFromCart}
-                />
-              }
-            />
-            <Route path="/login" element={<Login />} />
-            <Route
-              path="/orders"
-              element={
-                <ProtectedRoute>
-                  <Orders />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute requireAdmin={true}>
-                  <Admin onAddProduct={addProduct} />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
+          <Outlet />
         </div>
         <Footer />
       </div>
-    </Router>
+    </AppContext.Provider>
   )
 }
 export default App
