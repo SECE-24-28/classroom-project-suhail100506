@@ -1,5 +1,5 @@
 import { useState, createContext, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import axios from 'axios';
@@ -9,20 +9,45 @@ export const AppContext = createContext();
 const App = () => {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  // Set up axios interceptor to add token to all requests
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    }
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get('http://localhost:3000/products');
-      const data = response.data;
-      setProducts(data);
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          navigate('/login');
+          return;
+        }
+        const response = await axios.get('http://localhost:3000/products');
+        const data = response.data;
+        setProducts(data);
+      } catch (error) {
+        if (error.response?.status === 401) {
+          localStorage.removeItem('token');
+          navigate('/login');
+        }
+      }
     };
     fetchData();
-  }, []);
+  }, [navigate]);
 
   // Fetch cart from API
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
         const response = await axios.get('http://localhost:3000/cart');
         // Ensure cart is always an array
         setCart(Array.isArray(response.data) ? response.data : []);
@@ -111,8 +136,17 @@ const App = () => {
 
   const cartCount = cart?.reduce((total, item) => total + item.quantity, 0) || 0;
 
+  const logout = () => {
+    localStorage.removeItem('token');
+    setUser(null);
+    setProducts([]);
+    setCart([]);
+    delete axios.defaults.headers.common['Authorization'];
+    navigate('/login');
+  };
+
   return (
-    <AppContext.Provider value={{ products, cart, addProduct, addToCart, updateQuantity, removeFromCart }}>
+    <AppContext.Provider value={{ products, cart, user, setUser, addProduct, addToCart, updateQuantity, removeFromCart, logout }}>
       <div className="flex flex-col min-h-screen">
         <Navbar cartCount={cartCount} />
         <div className="flex-grow">

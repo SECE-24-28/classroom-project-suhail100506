@@ -1,26 +1,20 @@
-import { Link, useNavigate, useLocation } from 'react-router';
-import { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useState, useEffect, useContext } from 'react';
+import { AppContext } from '../App';
 
 const NavigationBar = ({ cartCount = 0 }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [role, setRole] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
+    const { logout } = useContext(AppContext);
 
     useEffect(() => {
-        const loggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
-        const userRole = sessionStorage.getItem('role') || '';
-        setIsLoggedIn(loggedIn);
-        setRole(userRole);
+        const token = localStorage.getItem('token');
+        setIsLoggedIn(!!token);
     }, [location]);
 
     const handleLogout = () => {
-        sessionStorage.removeItem('isLoggedIn');
-        sessionStorage.removeItem('role');
-        sessionStorage.removeItem('username');
-        setIsLoggedIn(false);
-        setRole('');
-        navigate('/');
+        logout();
     };
 
     return (
@@ -31,19 +25,24 @@ const NavigationBar = ({ cartCount = 0 }) => {
                 </Link>
                 <div className="space-x-4 text-lg font-medium">
                     <Link to="/" className="hover:text-gray-300">Home</Link>
-                    <Link to="/products" className="hover:text-gray-300">Products</Link>
+                    {isLoggedIn && <Link to="/products" className="hover:text-gray-300">Products</Link>}
                     {isLoggedIn && <Link to="/orders" className="hover:text-gray-300">Orders</Link>}
-                    {isLoggedIn && role === 'admin' && (
-                        <Link to="/admin" className="hover:text-gray-300">Admin</Link>
-                    )}
+                    {isLoggedIn && <Link to="/admin" className="hover:text-gray-300">Admin</Link>}
                 </div>
                 <div className="space-x-4 flex items-center">
-                    <Link
-                        to="/cart"
-                        className="bg-green-500 px-4 py-2 rounded hover:bg-green-600"
-                    >
-                        Cart
-                    </Link>
+                    {isLoggedIn && (
+                        <Link
+                            to="/cart"
+                            className="bg-green-500 px-4 py-2 rounded hover:bg-green-600 relative"
+                        >
+                            Cart
+                            {cartCount > 0 && (
+                                <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">
+                                    {cartCount}
+                                </span>
+                            )}
+                        </Link>
+                    )}
                     {isLoggedIn ? (
                         <button
                             onClick={handleLogout}

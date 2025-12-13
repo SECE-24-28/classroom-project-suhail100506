@@ -17,6 +17,7 @@
 // server.listen(3000,()=>{
 //     console.log('Server is running http://localhost:3000');
 // })
+require('dotenv').config();
 const express = require('express');
 const fs = require('fs');
 const app = express();
@@ -24,8 +25,11 @@ const productsRouter = require('./routes/product');
 const blogsRouter = require('./routes/Blogs');
 const cartRouter = require('./routes/cart');
 const studentsRouter = require('./routes/students');
+const authRouter = require('./routes/auth');
+const Middleware = require('./middleware/authMiddleware');
 const cors = require('cors');
 const connectDB = require('./config/db');
+const User = require('./models/User');
 connectDB();
 
 app.use(cors());
@@ -73,7 +77,11 @@ app.use('/products', productsRouter);
 app.use('/blogs', blogsRouter);
 app.use('/cart', cartRouter);
 app.use('/students', studentsRouter);
-
+app.use('/auth', authRouter);
+app.get('/profile', Middleware, async (req, res) => {
+    const user = await User.findById(req.userdata.id).select('-password');
+    res.status(200).json({ message: "Profile", userData: user });
+});
 app.listen(3000, () => {
     console.log('Server is running http://localhost:3000');
 })

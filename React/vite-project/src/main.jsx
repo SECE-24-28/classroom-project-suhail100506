@@ -11,12 +11,15 @@ import ProductList from './components/ProductList.jsx'
 import ProductDetails from './components/ProductDetails.jsx'
 import BlogsList from './components/BlogsList.jsx'
 import BlogDetails from './components/BlogDetails.jsx'
-import LoginPage from './components/LoginPage.jsx'
+import LoginForm from './components/LoginForm.jsx'
+import RegisterForm from './components/RegisterForm.jsx'
 import AdminPage from './components/AdminPage.jsx'
 import ProtectRoute from './components/ProtectRoute.jsx'
+import { Toaster } from 'react-hot-toast'
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
+    <Toaster position="top-right" />
     <Routes>
       <Route element={<HomeLayout />}>
         <Route path='/app' element={<App />} />
@@ -30,7 +33,8 @@ createRoot(document.getElementById('root')).render(
         <Route path='/contact' element={<Contact />} />
         <Route path='/' element={<Header />} />
       </Route>
-      <Route path='/login' element={<LoginPage />} />
+      <Route path='/login' element={<LoginForm />} />
+      <Route path='/register' element={<RegisterForm />} />
       <Route path='/admin' element={<ProtectRoute><AdminPage /></ProtectRoute>} />
     </Routes>
   </BrowserRouter>
