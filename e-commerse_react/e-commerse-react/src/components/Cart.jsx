@@ -1,9 +1,11 @@
 import { useContext } from "react";
 import { AppContext } from "../App";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const Cart = () => {
     const { cart, updateQuantity, removeFromCart } = useContext(AppContext);
+    const navigate = useNavigate();
     const total = cart?.reduce((sum, item) => sum + (item.price * item.quantity), 0) || 0;
 
     return (
@@ -77,7 +79,6 @@ const Cart = () => {
                         )}
                     </div>
 
-                    {/* Right side - Cart Summary (1/4) */}
                     <div className="lg:w-1/4">
                         <div className="bg-white rounded-lg shadow-md p-6 sticky top-4">
                             <h2 className="text-xl font-bold text-gray-800 mb-4">Order Summary</h2>
@@ -105,6 +106,7 @@ const Cart = () => {
 
                             <button
                                 disabled={!cart || cart.length === 0}
+                                onClick={() => navigate('/payment')}
                                 className={`w-full py-3 rounded-lg font-semibold transition ${!cart || cart.length === 0
                                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                     : 'bg-blue-500 hover:bg-blue-600 text-white'

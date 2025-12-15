@@ -2,30 +2,25 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this';
+const JWT_SECRET = process.env.JWT_SECRET || 'key';
 
-// Register new user
 const registerUser = async (req, res) => {
     try {
         const { username, email, password } = req.body;
 
-        // Check if user already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ error: "User with this email already exists" });
         }
 
-        // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create user
         const user = await User.create({
             username,
             email,
             password: hashedPassword
         });
 
-        // Generate token
         const token = jwt.sign(
             { userId: user._id, email: user.email },
             JWT_SECRET,
@@ -47,24 +42,20 @@ const registerUser = async (req, res) => {
     }
 };
 
-// Login user
 const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Find user
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(401).json({ error: "Invalid credentials" });
         }
 
-        // Check password
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.status(401).json({ error: "Invalid credentials" });
         }
 
-        // Generate token
         const token = jwt.sign(
             { userId: user._id, email: user.email },
             JWT_SECRET,
@@ -86,7 +77,6 @@ const loginUser = async (req, res) => {
     }
 };
 
-// Get current user
 const getCurrentUser = async (req, res) => {
     try {
         const user = await User.findById(req.user.userId).select('-password');
@@ -104,5 +94,3 @@ module.exports = {
     loginUser,
     getCurrentUser
 };
-
-module.exports = { registerUser, loginUser, getCurrentUser };

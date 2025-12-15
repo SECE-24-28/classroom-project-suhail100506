@@ -4,7 +4,6 @@ const Product = require('../models/Product');
 const fs = require('fs');
 const path = require('path');
 
-// Get all products
 router.get("/", async (req, res) => {
     try {
         const products = await Product.find();
@@ -14,7 +13,6 @@ router.get("/", async (req, res) => {
     }
 });
 
-// Get product by ID
 router.get("/:id", async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
@@ -28,7 +26,6 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// Create new product
 router.post("/", async (req, res) => {
     try {
         const newProduct = new Product({
@@ -40,20 +37,18 @@ router.post("/", async (req, res) => {
             category: req.body.category || 'Other',
             stock: req.body.stock || 0
         });
-        
+
         await newProduct.save();
-        
-        // Save to products.json
+
         const products = await Product.find();
         fs.writeFileSync("data/products.json", JSON.stringify(products, null, 2));
-        
+
         res.status(201).json({ message: "Product Created Successfully", product: newProduct });
     } catch (error) {
         res.status(500).json({ error: 'Failed to create product', message: error.message });
     }
 });
 
-// Update product
 router.put("/:id", async (req, res) => {
     try {
         const updatedProduct = await Product.findByIdAndUpdate(
@@ -61,12 +56,11 @@ router.put("/:id", async (req, res) => {
             req.body,
             { new: true, runValidators: true }
         );
-        
+
         if (updatedProduct) {
-            // Update products.json
             const products = await Product.find();
             fs.writeFileSync("data/products.json", JSON.stringify(products, null, 2));
-            
+
             res.json({ message: 'Product Updated Successfully', product: updatedProduct });
         } else {
             res.status(404).json({ error: 'Product Not Found' });
@@ -76,16 +70,14 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-// Delete product
 router.delete("/:id", async (req, res) => {
     try {
         const deletedProduct = await Product.findByIdAndDelete(req.params.id);
-        
+
         if (deletedProduct) {
-            // Update products.json
             const products = await Product.find();
             fs.writeFileSync("data/products.json", JSON.stringify(products, null, 2));
-            
+
             res.status(200).json({ message: 'Product Deleted Successfully' });
         } else {
             res.status(404).json({ error: 'Product Not Found' });

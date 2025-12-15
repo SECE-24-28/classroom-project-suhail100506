@@ -19,7 +19,6 @@ const Login = () => {
 
         try {
             if (isLogin) {
-                // Login
                 const response = await axios.post('http://localhost:3000/auth/login', {
                     email,
                     password
@@ -28,10 +27,21 @@ const Login = () => {
                 localStorage.setItem('token', response.data.token)
                 axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`
                 setUser(response.data.user)
+
+                // Store user info in sessionStorage for ProtectedRoute
+                sessionStorage.setItem('isLoggedIn', 'true')
+                sessionStorage.setItem('role', response.data.user.role)
+                sessionStorage.setItem('username', response.data.user.username)
+
                 toast.success('Login Successful!')
-                navigate('/products')
+
+                // Redirect admin to AddProduct page, regular users to products
+                if (response.data.user.role === 'admin') {
+                    navigate('/admin')
+                } else {
+                    navigate('/products')
+                }
             } else {
-                // Register
                 const response = await axios.post('http://localhost:3000/auth/register', {
                     username,
                     email,
@@ -41,6 +51,12 @@ const Login = () => {
                 localStorage.setItem('token', response.data.token)
                 axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`
                 setUser(response.data.user)
+
+                // Store user info in sessionStorage for ProtectedRoute
+                sessionStorage.setItem('isLoggedIn', 'true')
+                sessionStorage.setItem('role', response.data.user.role)
+                sessionStorage.setItem('username', response.data.user.username)
+
                 toast.success('Registration Successful!')
                 navigate('/products')
             }

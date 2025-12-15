@@ -9,5 +9,16 @@
     "createdAt": "2025-12-12T17:23:23.522Z",
     "updatedAt": "2025-12-14T15:34:44.575Z",
     "__v": 0
+  },
+  {
+    "_id": "693f845f2c65abfcb46604b9",
+    "productId": "693c51ed1303f9444eaaca07",
+    "name": "Mobile",
+    "price": 54000,
+    "image": "https://www.sathya.store/img/product/FAb9jtNpEjJeGtMP.png",
+    "quantity": 1,
+    "createdAt": "2025-12-15T03:45:35.736Z",
+    "updatedAt": "2025-12-15T03:45:35.736Z",
+    "__v": 0
   }
 ]

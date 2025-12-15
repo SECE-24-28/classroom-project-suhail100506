@@ -1,18 +1,5 @@
 [
   {
-    "originalPrice": 0,
-    "_id": "693c4d6103fe2dbf21386fdd",
-    "name": "Table",
-    "price": 1500,
-    "description": "",
-    "image": "https://img.freepik.com/premium-vector/illustration-wooden-dining-table-isolated_756535-8226.jpg?semt=ais_hybrid&w=740&q=80",
-    "category": "Home",
-    "stock": 0,
-    "createdAt": "2025-12-12T17:14:09.546Z",
-    "updatedAt": "2025-12-12T17:14:09.546Z",
-    "__v": 0
-  },
-  {
     "_id": "693c51ed1303f9444eaaca07",
     "name": "Mobile",
     "image": "https://www.sathya.store/img/product/FAb9jtNpEjJeGtMP.png",

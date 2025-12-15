@@ -12,12 +12,42 @@ const App = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  // Set up axios interceptor to add token to all requests
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    }
+    const initializeApp = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+        // Set user data from sessionStorage if available
+        const username = sessionStorage.getItem('username');
+        const role = sessionStorage.getItem('role');
+        if (username && role) {
+          setUser({ username, role });
+        }
+
+        // Fetch cart after setting token
+        try {
+          const cartResponse = await axios.get('http://localhost:3000/carts');
+          const cartData = cartResponse.data.cart;
+          
+          const transformedCart = cartData?.products?.map(item => ({
+            _id: item._id,
+            productId: item.product._id,
+            name: item.product.name,
+            price: item.product.price,
+            image: item.product.image,
+            quantity: item.quantity
+          })) || [];
+          
+          setCart(transformedCart);
+        } catch (error) {
+          console.error('Error fetching cart:', error);
+          setCart([]);
+        }
+      }
+    };
+
+    initializeApp();
   }, []);
 
   useEffect(() => {
@@ -41,24 +71,6 @@ const App = () => {
     fetchData();
   }, [navigate]);
 
-  // Fetch cart from API
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) return;
-
-        const response = await axios.get('http://localhost:3000/cart');
-        // Ensure cart is always an array
-        setCart(Array.isArray(response.data) ? response.data : []);
-      } catch (error) {
-        console.error('Error fetching cart:', error);
-        setCart([]);
-      }
-    };
-    fetchData();
-  }, []);
-
   const addProduct = async (newProduct) => {
     try {
       await axios.post('http://localhost:3000/products', {
@@ -80,16 +92,24 @@ const App = () => {
 
   const addToCart = async (product) => {
     try {
-      const response = await axios.post('http://localhost:3000/cart', {
+      const response = await axios.post('http://localhost:3000/carts', {
         productId: product._id || product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image || '',
         quantity: 1
       });
 
-      setCart(response.data.cart);
+      const cartData = response.data.cart;
+      const transformedCart = cartData?.products?.map(item => ({
+        _id: item._id,
+        productId: item.product._id,
+        name: item.product.name,
+        price: item.product.price,
+        image: item.product.image,
+        quantity: item.quantity
+      })) || [];
+      
+      setCart(transformedCart);
     } catch (error) {
+      console.error('Error adding to cart:', error);
       const existingItem = cart.find(item => item.productId === (product._id || product.id));
       if (existingItem) {
         setCart(cart.map(item =>
@@ -108,13 +128,23 @@ const App = () => {
       removeFromCart(cartItemId);
     } else {
       try {
-        const response = await axios.post(`http://localhost:3000/cart/${cartItemId}`, {
+        const response = await axios.put(`http://localhost:3000/carts/${cartItemId}`, {
           quantity: newQuantity
         });
 
-        setCart(response.data.cart);
+        const cartData = response.data.cart;
+        const transformedCart = cartData?.products?.map(item => ({
+          _id: item._id,
+          productId: item.product._id,
+          name: item.product.name,
+          price: item.product.price,
+          image: item.product.image,
+          quantity: item.quantity
+        })) || [];
+        
+        setCart(transformedCart);
       } catch (error) {
-
+        console.error('Error updating quantity:', error);
         setCart(cart.map(item =>
           item._id === cartItemId
             ? { ...item, quantity: newQuantity }
@@ -126,11 +156,43 @@ const App = () => {
 
   const removeFromCart = async (cartItemId) => {
     try {
-      const response = await axios.delete(`http://localhost:3000/cart/${cartItemId}`);
-      setCart(response.data.cart);
+      const response = await axios.delete(`http://localhost:3000/carts/${cartItemId}`);
+      
+      const cartData = response.data.cart;
+      const transformedCart = cartData?.products?.map(item => ({
+        _id: item._id,
+        productId: item.product._id,
+        name: item.product.name,
+        price: item.product.price,
+        image: item.product.image,
+        quantity: item.quantity
+      })) || [];
+      
+      setCart(transformedCart);
     } catch (error) {
-      // Fallback to local state
+      console.error('Error removing from cart:', error);
       setCart(cart.filter(item => item._id !== cartItemId));
+    }
+  };
+
+  const refreshCart = async () => {
+    try {
+      const cartResponse = await axios.get('http://localhost:3000/carts');
+      const cartData = cartResponse.data.cart;
+      
+      const transformedCart = cartData?.products?.map(item => ({
+        _id: item._id,
+        productId: item.product._id,
+        name: item.product.name,
+        price: item.product.price,
+        image: item.product.image,
+        quantity: item.quantity
+      })) || [];
+      
+      setCart(transformedCart);
+    } catch (error) {
+      console.error('Error refreshing cart:', error);
+      setCart([]);
     }
   };
 
@@ -138,6 +200,9 @@ const App = () => {
 
   const logout = () => {
     localStorage.removeItem('token');
+    sessionStorage.removeItem('isLoggedIn');
+    sessionStorage.removeItem('role');
+    sessionStorage.removeItem('username');
     setUser(null);
     setProducts([]);
     setCart([]);
@@ -146,7 +211,7 @@ const App = () => {
   };
 
   return (
-    <AppContext.Provider value={{ products, cart, user, setUser, addProduct, addToCart, updateQuantity, removeFromCart, logout }}>
+    <AppContext.Provider value={{ products, cart, user, setUser, addProduct, addToCart, updateQuantity, removeFromCart, refreshCart, logout }}>
       <div className="flex flex-col min-h-screen">
         <Navbar cartCount={cartCount} />
         <div className="flex-grow">
