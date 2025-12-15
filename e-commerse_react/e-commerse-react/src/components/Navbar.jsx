@@ -6,7 +6,7 @@ const NavigationBar = ({ cartCount = 0 }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
-    const { logout } = useContext(AppContext);
+    const { logout, user } = useContext(AppContext);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -27,7 +27,7 @@ const NavigationBar = ({ cartCount = 0 }) => {
                     <Link to="/" className="hover:text-gray-300">Home</Link>
                     {isLoggedIn && <Link to="/products" className="hover:text-gray-300">Products</Link>}
                     {isLoggedIn && <Link to="/orders" className="hover:text-gray-300">Orders</Link>}
-                    {isLoggedIn && <Link to="/admin" className="hover:text-gray-300">Admin</Link>}
+                    {isLoggedIn && user?.role === 'admin' && <Link to="/admin" className="hover:text-gray-300">Admin</Link>}
                 </div>
                 <div className="space-x-4 flex items-center">
                     {isLoggedIn && (

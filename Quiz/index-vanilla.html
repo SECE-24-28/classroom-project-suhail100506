@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App - Test Your Knowledge</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Start Screen -->
+        <div id="start-screen" class="screen active">
+            <div class="quiz-header">
+                <h1>📚 Quiz Challenge</h1>
+                <p>Test your knowledge with our timed quiz!</p>
+            </div>
+            <div class="quiz-info">
+                <div class="info-card">
+                    <span class="icon">❓</span>
+                    <h3>10 Questions</h3>
+                    <p>Multiple choice format</p>
+                </div>
+                <div class="info-card">
+                    <span class="icon">⏱️</span>
+                    <h3>30 Seconds</h3>
+                    <p>Per question</p>
+                </div>
+                <div class="info-card">
+                    <span class="icon">🏆</span>
+                    <h3>Score Points</h3>
+                    <p>Get instant results</p>
+                </div>
+            </div>
+            <div class="difficulty-selector">
+                <h3>Select Difficulty:</h3>
+                <div class="difficulty-buttons">
+                    <button class="difficulty-btn" data-difficulty="easy">Easy</button>
+                    <button class="difficulty-btn active" data-difficulty="medium">Medium</button>
+                    <button class="difficulty-btn" data-difficulty="hard">Hard</button>
+                </div>
+            </div>
+            <button id="start-btn" class="btn btn-primary">Start Quiz</button>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="screen">
+            <div class="quiz-header">
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+                <div class="quiz-stats">
+                    <div class="stat">
+                        <span class="stat-label">Question</span>
+                        <span id="question-number" class="stat-value">1/10</span>
+                    </div>
+                    <div class="stat timer-stat">
+                        <span class="stat-label">Time</span>
+                        <span id="timer" class="stat-value timer">30</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Score</span>
+                        <span id="current-score" class="stat-value">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quiz-content">
+                <div id="question-container">
+                    <h2 id="question-text" class="question-text"></h2>
+                    <div id="options-container" class="options-container"></div>
+                </div>
+            </div>
+
+            <div class="quiz-actions">
+                <button id="next-btn" class="btn btn-primary" disabled>Next Question</button>
+                <button id="quit-btn" class="btn btn-secondary">Quit Quiz</button>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="screen">
+            <div class="result-content">
+                <div id="result-icon" class="result-icon">🎉</div>
+                <h1 id="result-title">Quiz Completed!</h1>
+                <div class="score-display">
+                    <div class="final-score">
+                        <span id="final-score" class="score-number">0</span>
+                        <span class="score-total">/100</span>
+                    </div>
+                    <p id="score-message" class="score-message"></p>
+                </div>
+                <div class="result-stats">
+                    <div class="result-stat">
+                        <span class="result-label">Correct Answers</span>
+                        <span id="correct-count" class="result-value">0</span>
+                    </div>
+                    <div class="result-stat">
+                        <span class="result-label">Wrong Answers</span>
+                        <span id="wrong-count" class="result-value">0</span>
+                    </div>
+                    <div class="result-stat">
+                        <span class="result-label">Accuracy</span>
+                        <span id="accuracy" class="result-value">0%</span>
+                    </div>
+                    <div class="result-stat">
+                        <span class="result-label">Time Taken</span>
+                        <span id="time-taken" class="result-value">0s</span>
+                    </div>
+                </div>
+                <div class="result-actions">
+                    <button id="restart-btn" class="btn btn-primary">Try Again</button>
+                    <button id="review-btn" class="btn btn-secondary">Review Answers</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Review Screen -->
+        <div id="review-screen" class="screen">
+            <div class="quiz-header">
+                <h2>📝 Review Your Answers</h2>
+            </div>
+            <div id="review-container" class="review-container"></div>
+            <button id="back-to-result-btn" class="btn btn-primary">Back to Results</button>
+        </div>
+    </div>
+
+    <script src="questions.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

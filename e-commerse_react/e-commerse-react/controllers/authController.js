@@ -99,4 +99,10 @@ const getCurrentUser = async (req, res) => {
     }
 };
 
+module.exports = {
+    registerUser,
+    loginUser,
+    getCurrentUser
+};
+
 module.exports = { registerUser, loginUser, getCurrentUser };
