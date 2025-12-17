@@ -44,7 +44,26 @@ connectDB().then(() => {
     createAdminUser();
 });
 
-app.use(cors());
+// CORS configuration
+app.use(cors({
+    origin: function (origin, callback) {
+        const allowedOrigins = [
+            "http://localhost:5173",
+            "https://react-frontend-ecom-nine.vercel.app"
+        ];
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+    preflightContinue: false,
+    optionsSuccessStatus: 204
+}));
+
 app.use(express.json());
 
 app.use('/auth', authRouter);
@@ -53,6 +72,6 @@ app.use('/products', authMiddleware, productsRouter);
 app.use('/carts', authMiddleware, cartRouter);
 app.use('/orders', authMiddleware, ordersRouter);
 
-app.listen(3000, "0.0.0.0", () => {
-    console.log("Server running on port 3000");
+app.listen(process.env.PORT, "0.0.0.0", () => {
+    console.log(`Server running on port ${process.env.PORT}`);
 });
