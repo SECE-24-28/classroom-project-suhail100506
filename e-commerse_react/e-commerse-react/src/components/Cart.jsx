@@ -2,11 +2,50 @@ import { useContext } from "react";
 import { AppContext } from "../App";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 const Cart = () => {
-    const { cart, updateQuantity, removeFromCart } = useContext(AppContext);
+    const { cart, updateQuantity, removeFromCart, refreshCart } = useContext(AppContext);
     const navigate = useNavigate();
     const total = cart?.reduce((sum, item) => sum + (item.price * item.quantity), 0) || 0;
+
+    const handleCheckout = async () => {
+        if (!cart || cart.length === 0) {
+            toast.error('Your cart is empty');
+            return;
+        }
+
+        try {
+            const orderData = {
+                products: cart.map(item => ({
+                    product: item.productId,
+                    name: item.name,
+                    price: item.price,
+                    image: item.image,
+                    quantity: item.quantity
+                })),
+                shippingInfo: {
+                    fullName: sessionStorage.getItem('username') || 'Guest',
+                    email: 'customer@example.com',
+                    address: 'Default Address',
+                    city: 'Default City',
+                    zipCode: '000000'
+                },
+                paymentMethod: 'cod',
+                subtotal: total,
+                shipping: 40,
+                total: total + 40
+            };
+
+            await axios.post('http://localhost:3000/orders', orderData);
+            toast.success('Order placed successfully!');
+            await refreshCart();
+            setTimeout(() => navigate('/orders'), 1000);
+        } catch (error) {
+            const errorMsg = error.response?.data?.error || error.response?.data?.message || 'Failed to place order';
+            toast.error(errorMsg);
+        }
+    };
 
     return (
         <div className="min-h-screen bg-green-100 py-8">
@@ -106,7 +145,7 @@ const Cart = () => {
 
                             <button
                                 disabled={!cart || cart.length === 0}
-                                onClick={() => navigate('/payment')}
+                                onClick={handleCheckout}
                                 className={`w-full py-3 rounded-lg font-semibold transition ${!cart || cart.length === 0
                                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                     : 'bg-blue-500 hover:bg-blue-600 text-white'

@@ -53,6 +53,6 @@ app.use('/products', authMiddleware, productsRouter);
 app.use('/carts', authMiddleware, cartRouter);
 app.use('/orders', authMiddleware, ordersRouter);
 
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(3000, "0.0.0.0", () => {
+    console.log("Server running on port 3000");
 });

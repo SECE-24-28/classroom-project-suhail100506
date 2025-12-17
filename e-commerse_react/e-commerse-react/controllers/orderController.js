@@ -12,25 +12,37 @@ const getOrders = async (req, res) => {
 
 const createOrder = async (req, res) => {
     try {
-        const { products, shippingInfo, paymentMethod, subtotal, shipping, total } = req.body;
-        if (!products || products.length === 0) return res.status(400).json({ error: 'No products in order' });
-        if (!shippingInfo || !shippingInfo.fullName || !shippingInfo.email) {
-            return res.status(400).json({ error: 'Incomplete shipping information' });
+        const { shippingAddress, paymentMethod } = req.body;
+        if (!shippingAddress || !shippingAddress.street || !shippingAddress.city || !shippingAddress.zipCode) {
+            return res.status(400).json({ error: 'Incomplete shipping address' });
         }
-        const orderProducts = products.map(item => ({
-            product: item.product || item.productId,
-            name: item.name,
-            price: item.price,
-            image: item.image,
+        const cart = await Cart.findOne({ user: req.user.userId }).populate('products.product');
+        if (!cart || cart.products.length === 0) return res.status(400).json({ error: 'Cart is empty' });
+
+        const orderProducts = cart.products.map(item => ({
+            product: item.product._id,
+            name: item.product.name,
+            price: item.product.price,
+            image: item.product.image,
             quantity: item.quantity
         }));
+        const subtotal = orderProducts.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const shipping = 40;
+        const total = subtotal + shipping;
+
         const newOrder = await Order.create({
             user: req.user.userId,
             products: orderProducts,
-            shippingInfo,
-            paymentMethod,
+            shippingInfo: {
+                fullName: shippingAddress.fullName || 'Customer',
+                email: shippingAddress.email || 'customer@example.com',
+                address: shippingAddress.street,
+                city: shippingAddress.city,
+                zipCode: shippingAddress.zipCode
+            },
+            paymentMethod: paymentMethod === 'credit_card' ? 'card' : paymentMethod,
             subtotal,
-            shipping: shipping || 40,
+            shipping,
             total
         });
         await Cart.findOneAndUpdate({ user: req.user.userId }, { products: [] });

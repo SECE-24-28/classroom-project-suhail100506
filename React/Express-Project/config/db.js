@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 async function connectDB() {
     try {
-        await mongoose.connect('mongodb://localhost:27017/school');
+        await mongoose.connect('mongodb+srv://suhail:suhail100506@cluster0.zjpg81g.mongodb.net/');
         console.log('MongoDB connected successfully');
     } catch (err) {
         console.error('MongoDB connection error:', err.message);
